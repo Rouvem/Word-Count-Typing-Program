@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
 	pthread_create(&tid, NULL, typer, NULL);
 	struct timeval t1, t2;
 	gettimeofday(&t1, NULL);
-	t2.tv_sec = t1.tv_sec + 10;
+	t2.tv_sec = t1.tv_sec + 60;
 	//printf("time 1: %d\n time2: %d\n", t1.tv_sec, t2.tv_sec);
 	while(t1.tv_sec < t2.tv_sec) {
 		gettimeofday(&t1, NULL);
@@ -72,9 +72,22 @@ int main(int argc, char **argv) {
 	
 	stop_thread = 1;
 	pthread_cancel(tid);
-	fprintf(stderr, "\nyou entered: %s\n", ReadBuffer);
+	fprintf(stderr, "\n\n\nYou entered: %s\n\n", ReadBuffer);
 	tcsetattr(0, TCSANOW, &oldt);
 	//int done;
 	//scanf("%d", done);
+	
+	// Count total number of words typed
+	int counting = 0;
+	word_count = 0;
+	int max = sizeof(ReadBuffer);
+	while(counting < max) {
+		c = ReadBuffer[counting];
+		if ( c == '\n' || c == '\t' || c == ' ') {
+			++word_count;
+		}
+		counting++;
+	}
+	printf("You typed a total of %d words\n", word_count);
 	return 0;
 }
